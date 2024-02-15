@@ -1,5 +1,4 @@
 import {
-  faArrowRight,
   faBed,
   faCalendarDays,
   faCar,
@@ -21,7 +20,7 @@ const Header = ({ setState }) => {
   const [startDate, setStartDate] = useState(new Date());
 
   const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 5;
+  const resultsPerPage = 4;
   const [searchResults, setSearchResults] = useState([]); // Move the declaration above its usage
   const [sourceCity, setSourceCity] = useState("");
   const [destinationCity, setDestinationCity] = useState("");
@@ -42,7 +41,7 @@ const Header = ({ setState }) => {
     console.log(data, "DestinationCity");
     setDestinationCity(data);
   };
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearch = async (event) => {
     try {
@@ -53,7 +52,7 @@ const Header = ({ setState }) => {
       const response = await fetch(apiUrl);
       const data = await response.json();
       console.log(data);
-      setSearchResults(data.data.result);
+      // setSearchResults(data.data.result);
 
       const filteredResults = data.data.result.filter((result) => {
         if (
@@ -108,18 +107,13 @@ const Header = ({ setState }) => {
           <div className="headerSearch">
             <div className="headerSearchItem">
               <FontAwesomeIcon icon={faCity} className="headerIcon" />
-              <App
-                className="headerSearchInput"
-                SourceCity={SourceCity}
-                // onChange={(e) => setSourceCity(e.target.value)}
-              />
+              <App className="headerSearchInput" SourceCity={SourceCity} />
             </div>
             <div className="headerSearchItem">
               <FontAwesomeIcon icon={faCity} className="headerIcon" />
               <SearchdropdownTo
                 className="headerSearchInput"
                 DestinationCity={DestinationCity}
-                // onChange={(e) => setDestinationCity(e.target.value)}
               />
             </div>
 
@@ -142,7 +136,7 @@ const Header = ({ setState }) => {
             </div>
           </div>
         </div>
-      </div
+      </div>
 
       <div>
         {currentResults && (
