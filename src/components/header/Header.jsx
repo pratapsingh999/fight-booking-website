@@ -24,6 +24,7 @@ const Header = ({ setState }) => {
   const [searchResults, setSearchResults] = useState([]); // Move the declaration above its usage
   const [sourceCity, setSourceCity] = useState("");
   const [destinationCity, setDestinationCity] = useState("");
+  const [error, setError] = useState("");
 
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
@@ -45,28 +46,34 @@ const Header = ({ setState }) => {
 
   const handleSearch = async (event) => {
     try {
-      const formattedDate = startDate.toISOString().split("T")[0]; // Format date as 'YYYY-MM-DD'
       const apiUrl = `https://api.npoint.io/4829d4ab0e96bfab50e7`;
-      // ?sourcecity=${sourceCity}&destinationcity=${destinationCity}&date=${formattedDate}
-
       const response = await fetch(apiUrl);
       const data = await response.json();
       console.log(data);
-      // setSearchResults(data.data.result);
 
       const filteredResults = data.data.result.filter((result) => {
         if (
           result.displayData.source.airport.cityName === sourceCity &&
           result.displayData.destination.airport.cityName === destinationCity
         ) {
-          return result;
+          return true;
         }
+        return false;
       });
       console.log(filteredResults, "filteredResults");
       setSearchResults(filteredResults);
+
+       if (filteredResults.length === 0) {
+        setError("Data not found. Please select correct destination.");
+        setSearchResults([]); 
+      } else {
+        setSearchResults(filteredResults);
+        setError("");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       console.log("Error fetching data:", error);
+      setError("Data not found select correct destination");
     }
   };
 
@@ -139,7 +146,15 @@ const Header = ({ setState }) => {
       </div>
 
       <div>
-        {currentResults && (
+        {currentResults.length === 0 ? (
+       <div className="no-results-message">
+            {error && (
+              <div className="error-message">
+                <h1>{error}</h1>
+              </div>
+            )}
+          </div>
+      ):(
           <div className="">
             {currentResults.map((result, index) => (
               <div className="" key={index}>
